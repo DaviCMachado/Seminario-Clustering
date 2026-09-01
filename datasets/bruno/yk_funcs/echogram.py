@@ -5,7 +5,8 @@ import numpy as np
 def envelope(signal, axis=-1):
     """Determines envelope of an signal using Hilbert Transform.
     Used for analysis of room reflections, in this context, the
-    envelope of a signal is called 'reflectogram' or 'echogram'.
+    envelope of a impulse response is often called a 'reflectogram' 
+    or 'echogram'.
 
     References:
         [1] Kuttruff. Room Acoustics (4nd Ed.). Section 8.4
