@@ -1,0 +1,7 @@
+experiment_name: dwt_sym5_L4
+inherits: baseline.yaml
+representation:
+  type: dwt
+  wavelet: sym5
+  level: 4
+  features: [relative_energy, shannon_entropy, statistics]

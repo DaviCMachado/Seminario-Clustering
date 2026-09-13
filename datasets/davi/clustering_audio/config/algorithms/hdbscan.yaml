@@ -1,0 +1,6 @@
+experiment_name: hdbscan_comparison
+inherits: ../baseline.yaml
+clustering:
+  method: hdbscan
+  # Aqui k_values representa min_cluster_size, não o número de grupos.
+  k_values: [10, 20, 30, 50, 75]

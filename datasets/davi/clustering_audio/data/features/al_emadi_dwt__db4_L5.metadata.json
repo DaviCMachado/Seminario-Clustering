@@ -1,0 +1,83 @@
+{
+  "config": {
+    "experiment_name": "dwt_ablation__db4_L5",
+    "seed": 42,
+    "audio": {
+      "target_sample_rate": 16000,
+      "mono": true,
+      "clip_duration_seconds": null,
+      "frame_length_ms": 40,
+      "hop_length_ms": 20,
+      "window": "hann"
+    },
+    "features": {
+      "n_mfcc": 20,
+      "include_delta": true,
+      "descriptors": [
+        "rms",
+        "zero_crossing_rate",
+        "spectral_centroid",
+        "spectral_rolloff",
+        "spectral_bandwidth"
+      ],
+      "temporal_statistics": [
+        "mean",
+        "std",
+        "median",
+        "p10",
+        "p90"
+      ]
+    },
+    "representation": {
+      "type": "dwt",
+      "wavelet": "db4",
+      "level": 5,
+      "features": [
+        "relative_energy",
+        "shannon_entropy",
+        "statistics"
+      ]
+    },
+    "dataset": {
+      "name": "drone_audio",
+      "max_samples": null,
+      "group_by_source": true
+    },
+    "clustering": {
+      "method": "kmeans",
+      "k_values": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        12
+      ],
+      "pca_components": 0.95
+    },
+    "evaluation": {
+      "metrics": [
+        "silhouette",
+        "calinski_harabasz",
+        "davies_bouldin"
+      ],
+      "bootstrap_runs": 10
+    },
+    "dwt_grid": {
+      "wavelet": [
+        "db4",
+        "sym5",
+        "coif5"
+      ],
+      "level": [
+        4,
+        5
+      ]
+    }
+  },
+  "input_manifest": "data\\manifests\\al_emadi.csv",
+  "rows": 500,
+  "errors": 0
+}

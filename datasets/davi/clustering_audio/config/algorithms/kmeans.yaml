@@ -1,0 +1,5 @@
+experiment_name: kmeans_comparison
+inherits: ../baseline.yaml
+clustering:
+  method: kmeans
+  k_values: [2, 3, 4, 5, 6]

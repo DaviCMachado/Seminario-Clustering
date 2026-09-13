@@ -1,0 +1,13 @@
+experiment_name: dwt_ablation
+inherits: baseline.yaml
+
+representation:
+  type: dwt
+  wavelet: db4
+  level: 4
+  features: [relative_energy, shannon_entropy, statistics]
+
+# Seis representações multirresolução: três famílias × dois níveis.
+dwt_grid:
+  wavelet: [db4, sym5, coif5]
+  level: [4, 5]

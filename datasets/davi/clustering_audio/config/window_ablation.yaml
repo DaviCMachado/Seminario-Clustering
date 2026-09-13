@@ -1,0 +1,10 @@
+experiment_name: window_ablation
+seed: 42
+
+# Uma execução é criada para cada combinação abaixo.
+grid:
+  frame_length_ms: [20, 40, 80]
+  hop_length_ms: [10, 20, 40]
+  window: [boxcar, hann, hamming, blackman]
+
+inherits: baseline.yaml

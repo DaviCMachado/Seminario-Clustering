@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+
+data/manifests/*.csv
+data/features/*.parquet
+data/features/*.npz
+outputs/figures/*
+outputs/metrics/*
+outputs/models/*
+!data/manifests/.gitkeep
+!data/features/.gitkeep
+!outputs/figures/.gitkeep
+!outputs/metrics/.gitkeep
+!outputs/models/.gitkeep

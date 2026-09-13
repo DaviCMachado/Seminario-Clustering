@@ -1,0 +1,5 @@
+experiment_name: hierarchical_comparison
+inherits: ../baseline.yaml
+clustering:
+  method: hierarchical
+  k_values: [2, 3, 4, 5, 6]

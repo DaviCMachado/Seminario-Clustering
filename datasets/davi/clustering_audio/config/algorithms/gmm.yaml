@@ -1,0 +1,5 @@
+experiment_name: gmm_comparison
+inherits: ../baseline.yaml
+clustering:
+  method: gmm
+  k_values: [2, 3, 4, 5, 6]

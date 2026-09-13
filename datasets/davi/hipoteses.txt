@@ -1,0 +1,3 @@
+hipotese 1: “Representações acústicas se organizam espontaneamente por presença de drone, número de motores, ambiente e condição de captura?”
+
+hipotese 2: “Representações tempo-frequência baseadas em STFT e wavelets produzem estruturas de cluster distintas e mais coerentes para áudio de drones?”
