@@ -1,0 +1,5 @@
+experiment_name: hierarchical_k2_validation
+inherits: hierarchical.yaml
+clustering:
+  method: hierarchical
+  k_values: [2]

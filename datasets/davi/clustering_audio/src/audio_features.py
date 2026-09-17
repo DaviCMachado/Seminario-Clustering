@@ -6,6 +6,7 @@ from typing import Iterable
 import librosa
 import numpy as np
 import pywt
+import soundfile as sf
 
 
 def _statistics(values: np.ndarray, names: Iterable[str]) -> dict[str, float]:
@@ -44,11 +45,23 @@ def _wavelet_features(signal: np.ndarray, duration_seconds: float, config: dict,
 
 def extract_features(path: str, audio_config: dict, feature_config: dict, representation_config: dict | None = None) -> dict[str, float]:
     """Retorna um vetor por áudio, via STFT ou DWT, sem usar rótulos."""
-    sr = int(audio_config["target_sample_rate"])
-    signal, _ = librosa.load(path, sr=sr, mono=bool(audio_config.get("mono", True)))
+    target_sr = int(audio_config["target_sample_rate"])
+    # soundfile evita o overhead de librosa.load quando o arquivo já está na
+    # taxa-alvo (caso predominante no Al Emadi: mono, 16 kHz).
+    signal, source_sr = sf.read(path, dtype="float32", always_2d=True)
+    if audio_config.get("mono", True):
+        signal = signal.mean(axis=1)
+    else:
+        signal = signal[:, 0]
+    if source_sr != target_sr:
+        signal = librosa.resample(signal, orig_sr=source_sr, target_sr=target_sr)
+    sr = target_sr
     duration = audio_config.get("clip_duration_seconds")
     if duration:
-        signal = librosa.util.fix_length(signal, size=round(float(duration) * sr))
+        target_size = round(float(duration) * sr)
+        signal = signal[:target_size]
+        if len(signal) < target_size:
+            signal = np.pad(signal, (0, target_size - len(signal)))
     if signal.size == 0:
         raise ValueError("arquivo de áudio vazio")
 

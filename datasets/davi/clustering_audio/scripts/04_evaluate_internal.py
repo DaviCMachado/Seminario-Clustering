@@ -12,6 +12,7 @@ def main() -> None:
     parser.add_argument("features", type=Path)
     parser.add_argument("clusters_dir", type=Path)
     parser.add_argument("--output", type=Path, default=Path("outputs/metrics/internal_metrics.csv"))
+    parser.add_argument("--silhouette-sample-size", type=int, help="amostra determinística para silhouette em datasets grandes")
     args = parser.parse_args()
     features = pd.read_csv(args.features)
     numeric = [c for c in features.select_dtypes("number").columns if c not in IDENTIFIERS]
@@ -23,8 +24,10 @@ def main() -> None:
         labels = merged["cluster"].to_numpy()
         if not 1 < len(set(labels)) < len(labels): continue
         positions = features.index[features["filepath"].isin(merged["filepath"])].to_numpy()
+        sample_size = min(args.silhouette_sample_size, len(labels)) if args.silhouette_sample_size else None
         rows.append({"run": path.stem, "samples": len(labels), "clusters": len(set(labels)),
-                     "silhouette": silhouette_score(matrix[positions], labels),
+                     "silhouette_samples": sample_size or len(labels),
+                     "silhouette": silhouette_score(matrix[positions], labels, sample_size=sample_size, random_state=42),
                      "calinski_harabasz": calinski_harabasz_score(matrix[positions], labels),
                      "davies_bouldin": davies_bouldin_score(matrix[positions], labels)})
     args.output.parent.mkdir(parents=True, exist_ok=True)
