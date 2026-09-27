@@ -23,6 +23,7 @@ def envelope(signal, axis=-1):
     signal_hilbert = np.fft.irfft(-1j*signal_jw, axis=axis)
     return np.sqrt(signal**2 + signal_hilbert**2).squeeze()
 
+
 def modified_kurtosis(signal, block_sizes=[4,64],axis=-1):
     """
     Calculates time dependent Kurtosis, used for onset time estimation 
@@ -63,7 +64,6 @@ def modified_kurtosis(signal, block_sizes=[4,64],axis=-1):
     Returns:
         NDArray: Time dependent modified kurtosis estimation. 
     """
-
     signal = np.atleast_2d(signal)
 
     if (len(block_sizes)!= 2):
@@ -111,9 +111,7 @@ def modified_kurtosis(signal, block_sizes=[4,64],axis=-1):
 
         var_l = np.nanmean((sig_chk_l-chk_mean_l)**2, axis=axis, keepdims=True) #n,
 
-        output[tuple(out_indexer)] = ((
-            (chk_mean_s - chk_mean_l)**4 / var_l
-            )**2).squeeze()
+        output[tuple(out_indexer)] = ((chk_mean_s - chk_mean_l)**4/ var_l**2).squeeze()
 
     output = np.nan_to_num(output,nan=0)
     return output.squeeze()

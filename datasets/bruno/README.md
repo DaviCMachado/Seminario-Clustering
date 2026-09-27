@@ -1,56 +1,10 @@
-## Descrição dos datasets utilizados
-<style type="text/css">
-    .tg td{
-        border-color:black;
-        border-style:solid;
-        border-width:1px;
-        font-family:Arial, sans-serif;font-size:14px;
-        overflow:hidden;
-        padding:10px 5px;
-        word-break:normal;
-    }
-    .tg th{
-        border-color:black;
-        border-style:solid;
-        border-width:1px;
-        font-family:Arial, sans-serif;font-size:14px; font-weight:normal;overflow:hidden;
-        padding:10px 5px;
-        word-break:normal;
-    }
-    .tg .tbl{
-        border-color:inherit;
-        text-align:left;
-        vertical-align:top
-    }
-</style>
-<table class="tg">
-  <thead>
-    <tr>
-      <th class="tbl">output</th>
-      <th class="tbl">input</th>
-      <th class="tbl">reference</th>
-      <th class="tbl">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="tbl">SoundFieldControlPlanarDataset_processed</td>
-      <td class="tbl">DTU Electro (b. 355 r. 008)</td>
-      <td class="tbl"><a href="doi.org/10.11583/DTU.21740453"><span style="color:#905">doi.org/10.11583/DTU.21740453</span></a></td>
-      <td class="tbl">Arranjo planar de 900 respostas impulsivas em uma sala <br>de controle;</td>
-    </tr>
-    <tr>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-    </tr>
-    <!-- <tr>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-      <td class="tbl"></td>
-    </tr> -->
-  </tbody>
-</table>
+# Descrição dos datasets utilizados
+A pasta apresenta dois arquivos `.hdf5`, que são conjuntos de dados com *features* já extraidas. O conjunto de dados base é um arranjo planar de 900 respostas impulsivas, medidas em sala de controle vazia [1].
+
+- `PlanarArray_Eer.hdf5`: Envelope de reflexões iniciais, replicando procedimento adotado por Zhang, Zhu e Shen [2].
+- `PlanarArray_Eds.hdf5`: Envelope de reflexões iniciais e som direto. Adapta procedimento [2] realizado em `PlanarArray_Eer.hdf5` para incluir som direto da fonte.
+
+## Referências
+[1] X. Karakonstantis and E. Fernandez Grande, “Planar Room Impulse Response Dataset - ACT, DTU Electro (b. 355 r. 008).” Technical University of Denmark, 2024. doi: 10.11583/DTU.21740453.
+
+[2] Zhang, Z., Zhu, G., & Shen, Y. (2018). Data clustering analysis of early reflections in small room. *The Journal of the Acoustical Society of America, 144*(4), EL328–EL332. [https://doi.org/10.1121/1.5065073](https://doi.org/10.1121/1.5065073)
