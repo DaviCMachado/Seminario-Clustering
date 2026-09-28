@@ -5,6 +5,7 @@ from pathlib import Path
 import librosa, librosa.display
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib.colors import BoundaryNorm
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
@@ -29,7 +30,13 @@ def main() -> None:
         merged = frame.merge(labels[["filepath", "cluster"]], on="filepath")
         numeric = [c for c in merged.select_dtypes("number").columns if c not in {"cluster", "duration_seconds"}]
         xy = PCA(n_components=2, random_state=42).fit_transform(StandardScaler().fit_transform(merged[numeric].fillna(merged[numeric].median())))
-        plt.figure(figsize=(8, 6)); scatter = plt.scatter(xy[:, 0], xy[:, 1], c=merged["cluster"], s=8, cmap="tab20")
-        plt.colorbar(scatter, label="cluster"); plt.xlabel("PC1"); plt.ylabel("PC2"); plt.tight_layout()
+        cluster_values = sorted(merged["cluster"].unique())
+        boundaries = [value - 0.5 for value in cluster_values] + [cluster_values[-1] + 0.5]
+        norm = BoundaryNorm(boundaries, ncolors=len(cluster_values))
+        plt.figure(figsize=(8, 6))
+        scatter = plt.scatter(xy[:, 0], xy[:, 1], c=merged["cluster"], s=8, cmap="tab20", norm=norm)
+        colorbar = plt.colorbar(scatter, ticks=cluster_values)
+        colorbar.set_label("cluster")
+        plt.xlabel("PC1"); plt.ylabel("PC2"); plt.tight_layout()
         plt.savefig(args.output_dir / "clusters_pca.png", dpi=180); plt.close()
 if __name__ == "__main__": main()

@@ -14,3 +14,5 @@ venv.bak/
 
 # Audio
 *.wav
+datasets/davi/clustering_audio/data/features/
+datasets/davi/clustering_audio/data/outputs/
