@@ -14,7 +14,8 @@ def plot_wavetable(signals,categories,indexes,fs=44100,ax=None):
     ax = _parse_ax(ax, projection='3d')
     for n in indexes:
         z = np.ones(len(mics))*n*1E3/fs
-        ax.scatter(mics,z,signals[:,n],c=categories,s=5)
+        ax.scatter(mics,z,signals[:,n],c=categories,s=5,edgecolor='#55555555')
+
 
 def _parse_ax(ax,**kwargs):
     if ax is None:
