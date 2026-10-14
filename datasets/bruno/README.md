@@ -2,7 +2,6 @@
 A pasta apresenta dois arquivos `.hdf5`, que são conjuntos de dados com *features* já extraidas. O conjunto de dados base é um arranjo planar de 900 respostas impulsivas, medidas em sala de controle vazia [1].
 
 - `PlanarArray_Eer.hdf5`: Envelope de reflexões iniciais, replicando procedimento adotado por Zhang, Zhu e Shen [2].
-- `PlanarArray_Eds.hdf5`: Envelope de reflexões iniciais e som direto. Adapta procedimento [2] realizado em `PlanarArray_Eer.hdf5` para incluir som direto da fonte.
 
 ## Referências
 [1] X. Karakonstantis and E. Fernandez Grande, “Planar Room Impulse Response Dataset - ACT, DTU Electro (b. 355 r. 008).” Technical University of Denmark, 2024. doi: 10.11583/DTU.21740453.
