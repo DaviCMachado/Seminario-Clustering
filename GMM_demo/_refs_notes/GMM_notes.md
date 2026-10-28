@@ -1,4 +1,5 @@
 # GMM
+Nota: Tem algumas coisas erradas aqui. Especialmente no passo de maximization
 ## Um quase abstract
 O GMM, apesar de apresentado como uma técnica de clustering, pode ser entendido como uma tentativa de ajustar um RNG a um conjunto de dados. O RNG que queremos modelar é um conjunto de $K$ gaussianas e possui um seguinte comportamento:
 - Ao chamar o RNG, é sorteado uma das $K$ gaussianas para gerar um dado

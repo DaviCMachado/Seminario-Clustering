@@ -16,7 +16,7 @@ class GMM:
                                     evitando 'overfitting'. Defaults to 1E-6.
             random_state (int, optional): seed. Defaults to None.
         """
-        self.n_components = n_components
+        self.K = n_components
         self.max_iter = max_iter
         self.tol = tol
         self.random_state = random_state
@@ -35,27 +35,27 @@ class GMM:
         Args:
             X (ndarray): Dados de entrada
         """
-        n_samples, n_features = X.shape
+        n_samples, n_dims = X.shape
         km_mu,km_lbl,_=cluster.k_means(X = X,
-                                        n_clusters = self.n_components,
+                                        n_clusters = self.K,
                                         n_init=1,
                                         init='k-means++',
                                         random_state=self.random_state
                                         )
         self.means_ = km_mu #a média é o centróide
 
-        self.weights_ = np.zeros([self.n_components, 1])
-        self.covariances_ = np.zeros([self.n_components, n_features, n_features])
-        for k in range(self.n_components):
+        self.pi_ = np.zeros([self.K, 1])
+        self.covariances_ = np.zeros([self.K, n_dims, n_dims])
+        for k in range(self.K):
             # Os pesos são o quão representativo cada cluster
             # é para meu conjunto
-            self.weights_[k] = km_lbl[ km_lbl == k ].shape[0]/n_samples
+            self.pi_[k] = km_lbl[ km_lbl == k ].shape[0]/n_samples
             # X^T @ X + alpha @ I
             self.covariances_[k,:] = np.cov(X[km_lbl == k].T)
-            self.covariances_[k,:] +=  self.reg * np.eye(n_features)
+            self.covariances_[k,:] +=  self.reg * np.eye(n_dims)
 
 
-    def _gauss_evaluate(self, X, mean, cov):
+    def _gaussian(self, X, mean, cov):
         """Avalia a densidade de probabilidade de uma gaussiana 
         multivariada de média `mean` e covariância `cov` nos 
         pontos `X`.
@@ -68,11 +68,11 @@ class GMM:
         Returns:
             ndarray: Densidade de probabilidade avaliada nos pontos. (n_observações,) 
         """
-        n_features = X.shape[1]
+        n_dims = X.shape[1]
         diff = X - mean
         cov_inv = np.linalg.inv(cov)
         det = np.linalg.det(cov)
-        norm = 1.0 / np.sqrt(((2 * np.pi) ** n_features) * det)
+        norm = 1.0 / np.sqrt(((2 * np.pi) ** n_dims) * det)
         exp = np.exp(-0.5 * np.sum(diff @ cov_inv * diff, axis=1))
         return norm * exp
 
@@ -90,21 +90,21 @@ class GMM:
         """
         n_samples = X.shape[0]
         # responsabilidade (gamma_nk)
-        resp = np.zeros((n_samples, self.n_components))
+        gamma = np.zeros((n_samples, self.K))
 
-        for k in range(self.n_components):
-            resp[:, k] = self.weights_[k] * self._gauss_evaluate(
+        for k in range(self.K):
+            gamma[:, k] = self.pi_[k] * self._gaussian(
                 X, self.means_[k], self.covariances_[k]
             )
 
         # Normaliza (responsabilidades)
-        resp_sum = resp.sum(axis=1, keepdims=True)
-        resp_sum[resp_sum == 0] = 1e-10
-        resp /= resp_sum
-        return resp
+        gamma_sum = gamma.sum(axis=1, keepdims=True)
+        gamma_sum[gamma_sum == 0] = 1e-10
+        gamma /= gamma_sum
+        return gamma
 
 
-    def _maximization(self, X, resp):
+    def _maximization(self, X, gamma):
         """Após calcular a responsabilidade do meu modelo
         sobre cada observação. Utilizamos solução analítica
         para maximizar l(theta), com theta fixo.
@@ -113,20 +113,20 @@ class GMM:
             X (ndarray): Conjunto de observações
             resp (ndarray): Responsabilidade de cada cluster
         """
-        n_samples, n_features = X.shape
-        Nk = resp.sum(axis=0) + 1e-10
+        n_samples, n_dims = X.shape
+        gamma_k = gamma.sum(axis=0) + 1e-10
 
         # Atualiza pesos
-        self.weights_ = Nk / n_samples
+        self.pi_ = gamma_k / n_samples
 
         # Atualiza médias
-        self.means_ = (resp.T @ X) / Nk[:, np.newaxis]
+        self.means_ = (gamma.T @ X) / gamma_k[:, np.newaxis]
 
         # Atualiza covariâncias
-        for k in range(self.n_components):
-            dev_mu = X - self.means_[k] # Desvio (da média)
-            self.covariances_[k] = ((resp[:, k] * dev_mu.T) @ dev_mu) / Nk[k]
-            self.covariances_[k] += self.reg * np.eye(n_features)
+        for k in range(self.K):
+            deviation = X - self.means_[k] # Desvio (da média)
+            self.covariances_[k] = ((gamma[:, k] * deviation.T) @ deviation) / gamma_k[k]
+            self.covariances_[k] += self.reg * np.eye(n_dims)
 
 
 
@@ -142,8 +142,8 @@ class GMM:
         """
         n_samples = X.shape[0]
         prob = np.zeros(n_samples)
-        for k in range(self.n_components):
-            prob += self.weights_[k] * self._gauss_evaluate(
+        for k in range(self.K):
+            prob += self.pi_[k] * self._gaussian(
                 X, self.means_[k], self.covariances_[k]
             )
         # Para evitar ln(0) -> -infty
