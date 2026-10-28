@@ -77,12 +77,17 @@ $$
 \hat{\theta} = \arg \max_{\theta}\left\{\log \ell(\theta)\right\}.
 $$
 
-É importante notar que não é possível determinar um $\hat{\theta}$ global, no entanto, conseguimos maximizar $\ell(\theta)$ para um conjunto de parâmetros $\theta$ fixos. Nesse caso, o máximo ocorre ao encontrar a região em que $\ell(\theta)$ muda de sinal, isto acontece quando
+É importante notar que não é possível determinar um $\hat{\theta}$ global, no entanto, conseguimos maximizar $\ell(\theta)$ para um conjunto de parâmetros $\theta$ fixos. 
+<!-- Nesse caso, o máximo ocorre ao encontrar a região em que $\ell(\theta)$ muda de sinal,  -->
+
+>> ISSO ESTÀ ERRADO!!!
+
+isto acontece quando
 $$
 \frac{\mathrm{d}\ell(\theta)}{\mathrm{d}\theta}  = 0,
 $$
 o algoritmo *Expectation Maximization* se aproveita dessa definição para aproximar $\hat{\theta}$.
-> Técnicamente acho que seria $\nabla \ell(\theta) = 0$ (o gradiente da função), pensando em $\theta$ como um conjunto de coordenadas, mas acredito que seja mais intuitivo explicar pelo ponto de vista de Cálculo I.
+>**Nota:** relendo o Aggarwal percebo que a questão da derivada so existe nas direções da média e covariância. O peso envolve outras coisas...
 ### Expectation Maximization
 #### Passo 0: Inicialização
 Dar um chute para $\theta_1^{(\tau=0)},\dots,\theta_K^{(\tau=0)}$

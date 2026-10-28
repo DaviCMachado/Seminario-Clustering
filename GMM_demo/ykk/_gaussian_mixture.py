@@ -4,7 +4,7 @@ from sklearn import cluster
 _float_eps = np.finfo(float).eps*20
 
 class GMM:
-    def __init__(self, n_components=3, max_iter=100, tol=1e-4, reg=1E-6, random_state=None):
+    def __init__(self, K=3, max_iter=100, tol=1e-4, reg=1E-6, random_state=None):
         """Classe para análise de clusters
 
         Args:
@@ -16,7 +16,7 @@ class GMM:
                                     evitando 'overfitting'. Defaults to 1E-6.
             random_state (int, optional): seed. Defaults to None.
         """
-        self.K = n_components
+        self.K = K
         self.max_iter = max_iter
         self.tol = tol
         self.random_state = random_state
